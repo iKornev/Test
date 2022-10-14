@@ -1,4 +1,4 @@
-export default (error, request, response) => {
+export default (error, request, response, next) => {
     const status = error.status || 500;
     const message = error.message || 'Internal server error';
 

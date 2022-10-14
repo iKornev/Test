@@ -15,18 +15,18 @@ export default class RecordsService {
 
             fs.writeFile('db.json', JSON.stringify(db), (error) => {
                 if(error) {
-                    console.log('Failed to save data')
+                    console.log(error.message)
                 }
             })
 
             return record
         } catch (e) {
             console.log(e.message)
+            throw new Error(e.message)
         }
     }
 
     findRecords() {
-
         try {
             const db = fs.readFileSync('db.json', "utf-8")
             const { records } = JSON.parse(db);
@@ -34,6 +34,7 @@ export default class RecordsService {
             return records
         } catch (e) {
             console.log(e.message)
+            throw new Error(e.message)
         }
     }
 }
