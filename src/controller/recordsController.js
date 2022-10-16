@@ -7,11 +7,11 @@ export default class RecordsController {
         this.recordService = recordService
     }
 
-     createRecords(request, response, next) {
+     async createRecords(request, response, next) {
 
         let record;
         try {
-            record =  this.recordService.createRecord(request.body)
+            record =  await this.recordService.createRecord(request.body)
 
         } catch (e) {
             console.log(e)
@@ -25,11 +25,11 @@ export default class RecordsController {
         })
     }
 
-     getRecords(request, response, next) {
+     async getRecords(request, response, next) {
         let records;
 
         try {
-            records =  this.recordService.findRecords()
+            records =  await this.recordService.findRecords()
 
         } catch (e) {
             console.log(e.message)

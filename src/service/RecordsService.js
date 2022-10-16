@@ -2,18 +2,19 @@ import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
 
 export default class RecordsService {
-    createRecord(body) {
+    async createRecord(body) {
         try {
             const record = {
                 ...body,
                 id: uuidv4(),
             }
 
-            const db = JSON.parse(fs.readFileSync('db.json', "utf-8"))
-            const { records } = db
+            const dbResult = await this.getDataFromDB()
+            const { records } = dbResult
+
             records.push(record)
 
-            fs.writeFile('db.json', JSON.stringify(db), (error) => {
+            fs.writeFile('db.json', JSON.stringify(dbResult), (error) => {
                 if(error) {
                     console.log(error.message)
                 }
@@ -26,15 +27,26 @@ export default class RecordsService {
         }
     }
 
-    findRecords() {
+    async findRecords() {
         try {
-            const db = fs.readFileSync('db.json', "utf-8")
-            const { records } = JSON.parse(db);
+            const { records } = await this.getDataFromDB()
 
             return records
         } catch (e) {
             console.log(e.message)
             throw new Error(e.message)
         }
+    }
+
+    getDataFromDB() {
+        return new Promise((resolve, reject) => {
+            fs.readFile('db.json','utf-8', (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve(JSON.parse(data))
+            } )
+        })
     }
 }
